@@ -14,8 +14,31 @@
 #include <functional>  // for the function template used in the schedule signature
 #include <thread>      // for thread
 #include <vector>      // for vector
+#include <queue>       // for queue of tasks
+#include <mutex>       // for mutex
+#include <condition_variable> //for condition_variable for task availability
+#include "Semaphore.h" 
+#include <memory>
+
+
+using namespace std;
+struct Worker_t {
+  thread th;
+  size_t id;
+  std::shared_ptr<std::function<void()>> work;
+  bool sleep = true;
+  mutex lock; // spinlock
+};
+
+
+struct Dispatcher_t {
+  thread th;
+  function<void(void)> task;
+};
 
 class ThreadPool {
+
+  
  public:
 
 /**
@@ -30,7 +53,7 @@ class ThreadPool {
  * to be executed by one of the ThreadPool's threads as soon as
  * all previously scheduled thunks have been handled.
  */
-  void schedule(const std::function<void(void)>& thunk);
+  void schedule(const function<void(void)>& thunk);
 
 /**
  * Blocks and waits until all previously scheduled thunks
@@ -45,9 +68,21 @@ class ThreadPool {
  */
   ~ThreadPool();
   
+  void dispatcher_func(void);
+
+  void worker_func(struct Worker_t* self);
+
+
  private:
-  std::thread dt;                // dispatcher thread handle
-  std::vector<std::thread> wts;  // worker thread handles
+  struct Dispatcher_t dt;              // dispatcher thread handle
+  vector<struct Worker_t> wts;  // worker thread handles
+  queue<function<void(void)>> tasks; //task queue
+  mutex queue_mutex; //for protect the tasks
+  Semaphore sem;
+  condition_variable cv;
+  bool stop;
+
+
 
 /**
  * ThreadPools are the type of thing that shouldn't be cloneable, since it's

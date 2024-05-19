@@ -14,9 +14,12 @@ void computeSum(const vector<int>& data, int start, int end, int* result) {
 
 int main() {
     // Sample data
+    // cout<<"inicia"<<endl;
     vector<int> data = {100, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     int numThreads = 3;
+    // cout<<"antes del construc"<<endl;
     ThreadPool pool(numThreads);
+    // cout<<"despues del construc"<<endl;
 
     // Results vector to hold the sums computed by each thread
     vector<int> results(numThreads, 0);
