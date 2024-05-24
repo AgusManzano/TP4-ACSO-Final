@@ -8,55 +8,6 @@
 
 using namespace std;
 
-// void ThreadPool::dispatcher_func() {
-//     while (true) {
-//         sem.wait(); // Wait for a signal indicating a new task is available
-//         queue_mutex.lock(); 
-
-//         if (stop) {
-//             queue_mutex.unlock(); 
-//             // Stop all worker threads
-//             for (auto& wt : wts) {
-//                 wt.lock.lock();
-//                 wt.stop = true;
-//                 wt.lock.unlock();
-//             }
-//             cv.notify_all(); // Notify all worker threads
-//             break;
-//         }
-
-//         if (tasks.empty()) {
-//             queue_mutex.unlock(); // Release lock on the task queue
-//             continue;
-//         }
-        
-//         auto task = move(tasks.front()); // Get the next task from the queue
-//         tasks.pop(); // Remove the task from the queue
-//         queue_mutex.unlock(); // Release lock on the task queue
-
-//         unique_lock<mutex> lock(worker_mutex);
-//         cv.wait(lock, [this] {
-//             for (auto& wt : wts) {
-//                 if (wt.sleep) return true;
-//             }
-//             return false;
-//         });
-
-//         // Find a sleeping worker thread and assign the task
-//         for (auto& wt : wts) {
-//             wt.lock.lock();
-//             if (wt.sleep) {
-//                 wt.work = make_shared<function<void()>>(move(task));
-//                 wt.sleep = false;
-//                 wt.lock.unlock();
-//                 cv.notify_all(); // Notify the specific worker thread
-//                 break;
-//             }
-//             wt.lock.unlock();
-//         }
-//     }
-// }
-
 void ThreadPool::dispatcher_func() {
     while (true) {
         sem.wait(); // Esperar una señal que indica que una nueva tarea está disponible
