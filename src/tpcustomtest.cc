@@ -91,7 +91,7 @@ static void reuseThreadPoolTest() {
         cout << "This is a code." << endl;
         oslock.unlock();
         sleep_for(1000);
-    }); 
+    });
     pool.wait();
 }
 

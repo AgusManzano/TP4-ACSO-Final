@@ -15,7 +15,7 @@ void computeSum(const vector<int>& data, int start, int end, int* result) {
 int main() {
     // Sample data
     // cout<<"inicia"<<endl;
-    vector<int> data = {100, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+    vector<int> data = {100, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}; 
     int numThreads = 3;
     // cout<<"antes del construc"<<endl;
     ThreadPool pool(numThreads);
@@ -27,7 +27,7 @@ int main() {
     // Determine the size of each chunk of data to process
     int n = data.size();
     int chunkSize = (n + numThreads - 1) / numThreads;  // Ensure all data is covered
-
+    
     // Schedule tasks in the ThreadPool
     for (int i = 0; i < numThreads; ++i) {
         int start = i * chunkSize;
@@ -35,7 +35,7 @@ int main() {
         if (start < n) {
             // schedule the task with lambda function
             pool.schedule([start, end, i, &data, &results]() {computeSum(data, start, end, &results[i]);});
-            //pool.schedule(bind(computeSum, ref(data), start, end, &results[i]));
+            // pool.schedule(bind(computeSum, ref(data), start, end, &results[i]));
         }
     }
 

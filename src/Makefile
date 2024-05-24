@@ -8,26 +8,29 @@ SRC = thread-pool.cc main.cc Semaphore.cc
 OBJ = $(SRC:.cc=.o)
 
 # Test targets
-TEST_TARGET = test
+TEST_TARGET = tptest
 TEST_SRC = tptest.cc
 TEST_OBJ = $(TEST_SRC:.cc=.o)
 
 # Second test target
-TEST_TARGET2 = customtest
+TEST_TARGET2 = tpcustomtest
 TEST_SRC2 = tpcustomtest.cc
 TEST_OBJ2 = $(TEST_SRC2:.cc=.o)
 
 # Link the target with object files
 $(TARGET): $(filter-out $(TEST_OBJ),$(OBJ))
 	$(CXX) $(CXXFLAGS) -o $@ $^
+	rm -f $^
 
 # Link the test target with test files and the main target
 $(TEST_TARGET): $(filter-out main.o,$(OBJ)) $(TEST_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^
+	rm -f $^
 
 # Link the second test target with test files and the main target
 $(TEST_TARGET2): $(filter-out main.o,$(OBJ)) $(TEST_OBJ2)
 	$(CXX) $(CXXFLAGS) -o $@ $^
+	rm -f $^
 
 # Run the program with Valgrind
 valgrind: $(TARGET)
